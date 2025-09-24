@@ -1,7 +1,7 @@
 <?php
 
-    require_once('models/city.php');
-    require_once('dao/reviewDAO.php');
+    require_once __DIR__ . '/../models/city.php';
+    require_once __DIR__ . '/reviewDAO.php';
 
 
     class CityDAO implements CityDAOInterface {
@@ -13,28 +13,19 @@
         }
 
         public function buildCity($data){
-
             $city = new City();
 
-            $city->id = $data['id'];
-
-            $city->id = $data['id'];
-            $city->name = $data['name'];
-            $city->description = $data['description'];
-            $city->image = $data['image'];
-            $city->tourist_attractions = $data['tourist_attractions'];
-            $city->users_id = $data['users_id'];
-
-            //recebe as ratings do filme
+            $city->id = $data->id;
+            $city->name = $data->name;
+            $city->description = $data->description;
+            $city->image = $data->image;
+            $city->users_id = $data->users_id;
 
             $reviewDAO = new ReviewDAO($this->conn);
-
             $rating = $reviewDAO->getRating($city->id);
-
             $city->rating = $rating;
 
             return $city;
-
         }
         public function findAll(){
 

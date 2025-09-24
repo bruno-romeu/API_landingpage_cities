@@ -1,7 +1,7 @@
 <?php
 
-require_once('models/review.php');
-require_once('dao/userDAO.php');
+require_once __DIR__ . '/../models/review.php';
+require_once __DIR__ . '/userDAO.php';
 
     class ReviewDAO implements ReviewDAOInterface {
 
@@ -15,11 +15,11 @@ require_once('dao/userDAO.php');
 
             $reviewObject = new Review();
 
-            $reviewObject->id = $data['id'];
-            $reviewObject->rating = $data['rating'];
-            $reviewObject->review = $data['review'];
-            $reviewObject->users_id = $data['users_id'];
-            $reviewObject->cities_id = $data['cities_id'];
+            $reviewObject->id = $data->id; 
+            $reviewObject->rating = $data->rating;
+            $reviewObject->review = $data->review;
+            $reviewObject->users_id = $data->users_id;
+            $reviewObject->cities_id = $data->cities_id;
 
             return $reviewObject;
 
@@ -91,8 +91,8 @@ require_once('dao/userDAO.php');
 
             $stmt->execute();
 
-            iif ($stmt->rowCount() > 0) {
-            $soma_ratings = 0; 
+            if ($stmt->rowCount() > 0) {
+            $soma_ratings = 0;
             $reviews = $stmt->fetchAll();
 
             foreach ($reviews as $review) {
@@ -110,4 +110,6 @@ require_once('dao/userDAO.php');
         } else {
             return 0; 
         }
+    
+        }  
     }

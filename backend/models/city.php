@@ -8,6 +8,7 @@
         public $image;
         public $tourist_attractions;
         public $users_id;
+        public $rating;
 
         public function imageGenerateName() {
             return bin2hex(random_bytes(60)) . '.jpg';
@@ -21,7 +22,6 @@
         public function findAll();
         public function getLatestCities();
         public function getCitiesByUserId($id);
-        public function getMoviesByUserId($id);
         public function findById($id);
         public function findByName($name);
         public function create(City $city);
