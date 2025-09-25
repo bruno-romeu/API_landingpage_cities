@@ -14,19 +14,19 @@ require_once __DIR__ . '/../models/user.php';
 
             $user = new User();
 
-            $user->id = $data['id'];
-            $user->name = $data['name'];
-            $user->lastname = $data['lastname'];
-            $user->email = $data['email'];
-            $user->password = $data['password'];
-            $user->image = $data['image'];
-            $user->bio = $data['bio'];
-            $user->token = $data['token'];
+            $user->id = $data->id;
+            $user->name = $data->name;
+            $user->lastname = $data->lastname;
+            $user->email = $data->email;
+            $user->password = $data->password;
+            $user->image = $data->image;
+            $user->bio = $data->bio;
+            $user->token = $data->token;
 
             return $user;
 
         }
-        public function create(User $user, $authUser = false) {
+        public function create(User $user) {
 
             $stmt = $this->conn->prepare('INSERT INTO users(
             name, lastname, email, password, token) VALUES (
@@ -41,9 +41,9 @@ require_once __DIR__ . '/../models/user.php';
             $stmt->execute();
 
             //autenticar usuário caso auth seja true
-            if($authUser) {
-                $this->setTokenToSession($user->token);
-            }
+            //if($authUser) {
+            //    $this->setTokenToSession($user->token);
+            //}
 
         }
         public function update(User $user) {
