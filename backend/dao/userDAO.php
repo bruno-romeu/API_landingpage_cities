@@ -39,6 +39,7 @@ require_once __DIR__ . '/../models/user.php';
             $stmt->bindParam(':token', $user->token);
 
             $stmt->execute();
+            return true;
 
             //autenticar usuário caso auth seja true
             //if($authUser) {
@@ -107,22 +108,13 @@ require_once __DIR__ . '/../models/user.php';
 
                     $token = $user->generateToken();
 
-                    $this->setTokenToSession($token, false);
-
-                    //atualizar o token do usuário
                     $user->token = $token;
-                    $this->update($user, false);
+                    $this->update($user); 
 
-                    return true;
-
-                } else {
-                    return false;
+                    return $token; 
                 }
-
-            } else {
-                return false;
             }
-
+            return false;
         }
         public function findByEmail($email) {
 
