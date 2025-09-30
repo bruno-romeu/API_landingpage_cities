@@ -16,6 +16,10 @@
 
     $cities = $cityDAO->findAll();
 
+    if (!is_array($cities)) {
+        $cities = [];
+    }
+
 
     $response = [
         'status' => 'success',

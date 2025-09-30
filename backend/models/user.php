@@ -25,18 +25,14 @@
 
     };
 
-    interface UserDAOInterface{
-
+    // Em models/user.php
+    interface UserDAOInterface {
         public function buildUser($data);
         public function create(User $user);
         public function update(User $user);
-        public function verifyToken($protected = false);
-        public function setTokenToSession($token);
         public function authenticateUser($email, $password);
         public function findByEmail($email);
         public function findById($id);
         public function findByToken($token);
-        public function destroyToken();
         public function changePassword(User $user);
-
     }

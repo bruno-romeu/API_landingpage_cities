@@ -39,50 +39,70 @@ require_once __DIR__ . '/userDAO.php';
                 return true;
 
         }
-        public function getcitiesReview($id) {
+
+        public function findByCityId($cityId) {
             $reviews = [];
 
-            $stmt = $this->conn->prepare("SELECT * FROM reviews WHERE cities_id = :cities_id");
+            $stmt = $this->conn->prepare("
+                SELECT r.*, u.name, u.lastname 
+                FROM reviews r
+                INNER JOIN users u ON r.users_id = u.id
+                WHERE r.cities_id = :cities_id
+                ORDER BY r.id DESC
+            ");
 
-            $stmt->bindParam(":cities_id", $id);
-
+            $stmt->bindParam(":cities_id", $cityId);
             $stmt->execute();
 
-            if($stmt->rowCount() > 0) {
+            if ($stmt->rowCount() > 0) {
                 $reviewsData = $stmt->fetchAll();
 
-                $userDAO = new UserDAO($this->conn, $this->url);
+                foreach ($reviewsData as $review) {
+                    $reviewObject = new Review();
+                    $reviewObject->id = $review->id;
+                    $reviewObject->rating = $review->rating;
+                    $reviewObject->review = $review->review;
+                    $reviewObject->cities_id = $review->cities_id;
+                    $reviewObject->users_id = $review->users_id;
 
-                foreach($reviewsData as $review) {
-
-                    $reviewObject = $this->buildReview($review);
-
-                    //chamar dados do user
-                    $user = $userDAO->findById($reviewObject->users_id);
-                    $reviewObject->user = $user;
-
+                    $reviewObject->userName = $review->name . " " . $review->lastname;
+                    
                     $reviews[] = $reviewObject;
                 }
-            } 
-            return $reviews;
-
-        }
-        public function hasAlreadyReviwed($id, $userId) {
-
-            $stmt = $this->conn->prepare("SELECT * FROM reviews WHERE cities_id = :cities_id AND users_id = :users_id");
-
-            $stmt->bindParam(":cities_id", $id);
-            $stmt->bindParam(":users_id", $userId);
-
-            $stmt->execute();
-
-            if($stmt->rowCount() > 0) {
-                return true;
-            } else{
-                return false;
             }
 
+            return $reviews;
         }
+
+
+        public function getLatestReviews($limit = 5) {
+            $reviews = [];
+
+            $stmt = $this->conn->prepare("
+                SELECT 
+                    r.rating, 
+                    r.review,
+                    u.name AS user_name,
+                    u.lastname AS user_lastname,
+                    c.name AS city_name
+                FROM reviews r
+                INNER JOIN users u ON r.users_id = u.id
+                INNER JOIN cities c ON r.cities_id = c.id
+                ORDER BY r.id DESC
+                LIMIT :limit
+            ");
+
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                $reviews = $stmt->fetchAll();
+            }
+
+            return $reviews;
+        }
+
+
         public function getRating($id) {
 
             $stmt = $this->conn->prepare("SELECT * FROM reviews WHERE cities_id = :cities_id");

@@ -71,32 +71,6 @@ require_once __DIR__ . '/../models/user.php';
             return true;
 
         }
-        public function verifyToken($protected = false) {
-
-            if(!empty($_SESSION['token'])) {
-
-                //pega o token da seção
-                $token = $_SESSION['token'];
-
-                //verifica se o user existe através do token
-                $user = $this->findByToken($token);
-                if($user) {
-                    return $user;
-                } else if($protected) {
-                    return false;
-                }
-            } else if($protected) {
-                return false;
-            }
-
-        }
-        public function setTokenToSession($token) {
-
-            //salvar token na seção
-            $_SESSION['token'] = $token;
-
-
-        }
         public function authenticateUser($email, $password) {
 
             $user = $this->findByEmail($email);
@@ -189,14 +163,6 @@ require_once __DIR__ . '/../models/user.php';
             }
         }
 
-        public function destroyToken() {
-
-            //remove o token da seção
-            $_SESSION['token'] = '';
-
-            return true;
-
-        }
 
         public function changePassword(User $user) {
 
