@@ -4,7 +4,6 @@ require_once __DIR__ . '/../models/review.php';
 require_once __DIR__ . '/userDAO.php';
 
     class ReviewDAO implements ReviewDAOInterface {
-
         private $conn;
 
         public function __construct(PDO $conn) {
